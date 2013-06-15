@@ -14,8 +14,23 @@ public class CategoryHolder {
 		loadMap();
 	}
 
-	private void parseLine(String parseLine) {
-
+	private void parseLine(String line) {
+		int start = line.indexOf('[');
+		int end = line.indexOf("]");
+		char[] buff = new char[200];
+		int buffIndex = 0;
+		String word;
+		for (int i = start+1; i != end; i ++){
+			if (line.charAt(i) == ','){
+				buff[buffIndex] = '\0';
+				word = String.valueOf(buff,0,buffIndex);
+				buffIndex = 0;
+				this.mapOfValues.put(word, (double) 0);
+			}else{
+				buff[buffIndex] = line.charAt(i);
+				buffIndex ++;
+			}
+		}
 	}
 
 	private void loadMap() {
@@ -28,5 +43,14 @@ public class CategoryHolder {
 		} catch (IOException e) {
 
 		}
+	}
+	
+	void addValues(Data d){
+		
+	}
+	
+	
+	public static void main(String[] args){
+		CategoryHolder test = new CategoryHolder();
 	}
 }
