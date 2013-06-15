@@ -1,6 +1,6 @@
 package Core;
 
-public class Link {
+public class Link implements Comparable<Link>{
 	String link;
 	double relevancy;
 	
@@ -9,8 +9,12 @@ public class Link {
 		this.relevancy = relevancy;
 	}
 	
-	
-	static int cmp(Link l1, Link l2){
-		return (int) (l1.relevancy - l2.relevancy);
+	@Override
+	public int compareTo(Link o) {
+			double result = this.relevancy - o.relevancy;
+			if (result < 0) return -1;
+			else if(result == 0) return 0;
+			else return 1;
+		
 	}
 }

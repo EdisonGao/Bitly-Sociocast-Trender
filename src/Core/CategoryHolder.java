@@ -5,10 +5,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.PriorityQueue;
 
 public class CategoryHolder {
 	static final String fileName = "assets/taxonomy.txt";
-	private Map<String, Double> mapOfValues = new HashMap<String, Double>();
+	private Map<String, CategoryData> mapOfValues = new HashMap<String, CategoryData>();
+	static int TOPRESULTSNUM = 10;
 
 	CategoryHolder() {
 		loadMap();
@@ -20,15 +22,16 @@ public class CategoryHolder {
 		char[] buff = new char[200];
 		int buffIndex = 0;
 		String word;
-		for (int i = start+1; i != end; i ++){
-			if (line.charAt(i) == ','){
+		for (int i = start + 1; i != end; i++) {
+			if (line.charAt(i) == ',') {
 				buff[buffIndex] = '\0';
-				word = String.valueOf(buff,0,buffIndex);
+				word = String.valueOf(buff, 0, buffIndex);
 				buffIndex = 0;
-				this.mapOfValues.put(word, (double) 0);
-			}else{
+				if (!mapOfValues.containsKey(word))
+					this.mapOfValues.put(word, new CategoryData(word));
+			} else {
 				buff[buffIndex] = line.charAt(i);
-				buffIndex ++;
+				buffIndex++;
 			}
 		}
 	}
@@ -44,13 +47,29 @@ public class CategoryHolder {
 
 		}
 	}
-	
-	void addValues(Data d){
-		
+
+	void addValues(Data d) {
+		for (String key : d) {
+			mapOfValues.get(key).add(new Link(d.link, d.get(key)));
+		}
 	}
-	
-	
-	public static void main(String[] args){
+
+	Map<String, CategoryData> getTrending() {
+		PriorityQueue<CategoryData> top = new PriorityQueue<CategoryData>(
+				TOPRESULTSNUM);
+		for (String key : mapOfValues.keySet()) {
+			top.add(mapOfValues.get(key));
+		}
+		HashMap<String, CategoryData> result = new HashMap<String, CategoryData>(
+				TOPRESULTSNUM);
+		for (CategoryData temp : top){
+			result.put(temp.name, temp);
+		}
+		return result;
+
+	}
+
+	public static void main(String[] args) {
 		CategoryHolder test = new CategoryHolder();
 	}
 }
