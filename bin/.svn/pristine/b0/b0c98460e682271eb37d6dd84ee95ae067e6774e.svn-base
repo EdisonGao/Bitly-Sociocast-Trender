@@ -83,7 +83,7 @@ class SimpleProvider implements Provider {
 		}
 		
 		int code = Integer.parseInt(Dom.getTextContent(statusCode));
-		if((code == 200) || ( code == 202))
+		if(code == 200)
 			return doc;
 		else {
 			throw new BitlyException(Dom.getTextContent(statusText));
